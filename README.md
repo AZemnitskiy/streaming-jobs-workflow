@@ -1,4 +1,4 @@
-#Streaming Jobs Workflow
+# Streaming Jobs Workflow
 
 Reference workflow that uses config-based directory structure to:  
  - control all topics operations (create/update/delete) are via configuration changes
