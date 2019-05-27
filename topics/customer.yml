@@ -1,6 +1,6 @@
 topic: "customer"                      # required, topic name
 replication-factor: 1                  # required, replicatio factor
 partitions: 2                          # required, number of topic partitions
-schema:  "customer/customer.v1.avro"   # required, schema definition is required before topic could be created
+schema:  "customer/customer.v1.avsc"   # required, schema definition is required before topic could be created
 #previous-names:  					   # optional, specify when renaming an existing topic
 #- client
