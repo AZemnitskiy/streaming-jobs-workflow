@@ -27,12 +27,10 @@ Next, create a YAML file populating required topic fields:
 
 **topics/mytopic.yml**
 ````
-topic: "mytopic"                      # required, topic name
-replication-factor: 1                 # required, replicatio factor
-partitions: 1                         # required, number of topic partitions
-schema:  "mytopic"                    # required, schema definition is required before topic could be created
-# previous-names:                     # optional, specify when renaming an existing topic
-# - "oldtopic"
+topic: "mytopic" 
+replication-factor: 1
+partitions: 1
+schema:  "mytopic"
 ````  
 Finally, run deployment script to apply changes. 
 This pushes new schema to the Schema Registry and creates a topic in Kafka. 
@@ -58,7 +56,7 @@ python deploy.py
 
 # API Endpoints & Variables
 Required API endpoints and any extra variables that need to be substituted 
-in your YAML configs should be set inside __utils/vars.yml__.
+in your YAML configs should be set inside __utils/variables.yml__.
 
 ### API Docs
 
@@ -76,15 +74,12 @@ https://docs.confluent.io/current/connect/references/restapi.html
 
 # Directory Structure
 ````
-infra
-  single-node-kafka-dev
-    docker-compose.yml
+topics
+  customer.yml
 schemas
   customer
     customer.v1.avsc
     customer.v2.avsc
-topics
-  customer.yml
 jobs
   etl
     etl.customer.in_file.yml
@@ -98,35 +93,72 @@ utils
     deploy_jobs.py
     deploy_topics.py
     deploy_schemas.py
-  vars.yml
+  infra
+    single-node-kafka-dev
+      docker-compose.yml  
+  variables.yml
 ````
+### Topics
+
+#### Naming Convention
+The following file naming convention is suggested (though, not enforced):
+
+**&lt;topic name&gt;.yml**
+
+#### File Format
+This is a YAML config file with the following fields:
+
+````
+# Topic name 
+# [type: string, required: true]
+topic: "customer"  
+
+# Topic replication factor
+# [type: int, required: true]            
+replication-factor: 1 
+         
+# Number of topic partitions         
+# [type: int, required: true]           
+partitions: 2
+
+# Associated schema name (without version). 
+# Schema should already be defined in the repo.                 
+# [type: string, required: true]               
+schema: "customer"
+
+# Populated this list only when renaming a topic.
+# Otherwise old topic content would be purged.              
+# [type: array of strings, required: false] 
+previous-names:
+- "oldtopic"
+````  
+
 ### Schemas
-This folder describes current state of message schemas in the Schema Repository.
-Any operations made inside this folder (e.g. file create/update/delete) will be deployed as corresponding 
-changes to the target Schema Registry node. 
+This folder describes all available message schemas in the Schema Repository and serves as a golden copy.
+Any changes made inside this folder (e.g. file create/update/delete) will be deployed as an incremental
+change to the target Schema Registry. 
 
-#### Naming Convensions
-The following file naming convension is followed (required for deployments):
+#### Naming Convention
+The following file naming convention is used (and enforced):
 
-**&lt;subject name&gt;.&lt;version number&gt;**
+**&lt;subject name&gt;.v&lt;version number&gt;.avsc**
 
-Deviations from the the naming convension above would throw validation error during deployment.
+If file name is not compatible, this would throw validation error during deployment.
 
-#### Avro Format
-We are using Apache Avro format to define message schemas. 
+#### File Format
+We are using vanilla Apache Avro format to define message schemas. 
 
 https://avro.apache.org/docs/1.3.3/spec.html
-
 
 ### Jobs
 Repository of Kafka Connect job definitions.
 Any operations made inside this folder (e.g. file create/update/delete) will be deployed as corresponding 
-changes to the target Kafka Connect node. 
+changes to the target Kafka Connect service. 
  
-#### Naming Convensions
-The following naming convension is suggested (not strict):
+#### Naming Convention
+The following file naming convention is suggested (though, not enforced):
 
-**&lt;message type&gt;.&lt;dataset name&gt;.&lt;context&gt;**
+**&lt;message type&gt;.&lt;dataset name&gt;.&lt;context&gt;.yml**
 
 Valid message type values are left up to the organization/team to define. Typical types include:
 
@@ -137,3 +169,8 @@ Valid message type values are left up to the organization/team to define. Typica
   * __streaming__ - for intermediate topics created by stream processing pipelines.
   * __push__ - for data that’s being pushed from offline (batch computation) environments into online environments.
   * __user__ - for user-specific data such as scratch and test topics.
+  
+#### File Format
+Format follows Kafka Connect definitions:
+
+https://docs.confluent.io/current/connect/references/allconfigs.html
