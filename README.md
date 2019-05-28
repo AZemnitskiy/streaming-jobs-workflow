@@ -1,4 +1,4 @@
-# Config-driven Release Management Workflow of Kafka Topics, Jobs & Schemas
+# Config-driven Management of Kafka Topics, Jobs & Schemas
 
 This repository and related scripts introduce config-driven release workflow for key resource definitions in Kafka ecosystem:
  - topics in Kafka
@@ -61,7 +61,7 @@ in your YAML configs should be set inside __utils/variables.yml__.
 
 ### API Docs
 
-**Kafka Manager**
+**Kafka Manager** 
 
 https://github.com/yahoo/kafka-manager/blob/master/conf/routes  
 
@@ -69,7 +69,7 @@ https://github.com/yahoo/kafka-manager/blob/master/conf/routes
 
 https://docs.confluent.io/current/kafka-rest/index.html
 
-**Kafka Connect - REST API**
+**Kafka Connect - REST API** 
 
 https://docs.confluent.io/current/connect/references/restapi.html
 

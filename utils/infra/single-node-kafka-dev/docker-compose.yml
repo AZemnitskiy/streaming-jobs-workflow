@@ -165,3 +165,13 @@ services:
     environment:
       SCHEMAREGISTRY_URL: 'http://192.168.99.101:8081'
 
+  topics-ui:
+    image: landoop/kafka-topics-ui
+    hostname: kafka-topics-ui
+    depends_on:
+    - rest-proxy
+    ports:
+    - "8003:8000"
+    environment:
+    - "KAFKA_REST_PROXY_URL=http://rest-proxy:8084"
+    - "PROXY=true"
