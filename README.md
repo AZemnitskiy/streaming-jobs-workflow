@@ -1,13 +1,14 @@
 # Config-driven Release Management Workflow of Kafka Topics, Jobs & Schemas
 
-This repository has a goal of establishing config-driven release workflow for key resource definitions in Kafka-centric ecosystem:
+This repository and related scripts introduce config-driven release workflow for key resource definitions in Kafka ecosystem:
  - topics in Kafka
- - schema definitions in Schema Registry
+ - schema definitions in Kafka Schema Registry
  - jobs in Kafka Connect
  
 # Manual 
 ### Creating New Topic
-Topics requires a valid schema definition file to be created first. Let's create a simple Avro schema first:
+Topics needs a valid schema definition file to be created first. 
+Let's create a simple Avro schema:
 
 **schemas/mytopic/mytopic.v1.yml**
 ````
@@ -39,7 +40,7 @@ python deploy.py
 ````
 ###  Modifying Existing Topic
 Changes in the existing topic definition would produce an "alter" statement on the existing Kafka topic during deployment. 
-In the example below we are changing number of partitions in an topic for an existing topic: 
+In the example below we are changing number of partitions inside an existing topic: 
 
 **topics/mytopic.yml**
 ````
@@ -134,7 +135,7 @@ previous-names:
 ````  
 
 ### Schemas
-This folder describes all available message schemas in the Schema Repository and serves as a golden copy.
+This folder contains all available schemas definitions that will be  synced with a Schema Repository (serves as a source of schemas).
 Any changes made inside this folder (e.g. file create/update/delete) will be deployed as an incremental
 change to the target Schema Registry. 
 
@@ -146,7 +147,8 @@ The following file naming convention is used (and enforced):
 If file name is not compatible, this would throw validation error during deployment.
 
 #### File Format
-We are using vanilla Apache Avro format to define message schemas. 
+We are using Apache Avro format to define message schemas. 
+Avro schemas are declared with plain JSON. For specific details refer to the format spec: 
 
 https://avro.apache.org/docs/1.3.3/spec.html
 
